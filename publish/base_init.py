@@ -6,7 +6,7 @@ create a new document files at base-doc.
 copyright 2025, hanagai
 
 base_init.py
-version: May 25, 2025
+version: May 27, 2025
 """
 
 import argparse
@@ -98,6 +98,37 @@ def write_md(args, git):
             f.write(md)
         git.git_add(path)
 
+def modify_readme(args, git):
+    r"""
+    modify README.md file and git add
+    """
+    path = conf_current.readme_path()
+    print(f'\nreadme path: {path}')
+    if path is None:
+        print('readme path is None, skip modifying README.md')
+        return
+
+    with open(path, 'r') as f:
+        lines = f.readlines()
+
+    key = '<!-- ARTICLES DESCENDANT -->\n'
+    if not key in lines:
+        print(f'readme file does not contain {repr(key)}, skip modifying README.md')
+        return
+    insert_after = lines.index(key)
+    print(f'insert after: {insert_after} line')
+    link = f'- [{args["title"]}]({os.path.relpath(conf_current.a_path(), conf_current.BASE)})\n'
+    print(f'link: {link}')
+    lines.insert(insert_after + 1, link)
+    #print(lines)
+
+    if DRY_RUN:
+        print('DRY RUN: skip writing readme file')
+    else:
+        with open(path, 'w') as f:
+            f.writelines(lines)
+        git.git_add(path)
+
 def commit_and_push(git):
     r"""
     commit and push
@@ -130,6 +161,7 @@ def make_initial_documents(args):
     git = BaseGit(skip_initialize=DRY_RUN)
     write_yaml(args, git)
     write_md(args, git)
+    modify_readme(args, git)
     commit_and_push(git)
 
     notify('Done')

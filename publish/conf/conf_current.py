@@ -7,7 +7,7 @@ current settings
 copyright 2025, hanagai
 
 conf/conf_current.py
-version: May 23, 2025
+version: May 27, 2025
 """
 
 import os.path
@@ -85,6 +85,12 @@ def media_path(name):
     get current `media file` path
     """
     return os.path.join(meta(), f"{get_current('key')}_{name}")
+
+def readme_path():
+    r"""
+    get current `readme md` path
+    """
+    return os.path.join(BASE, 'README.md')
 
 def date_format_reiwa(date):
     r"""
@@ -206,16 +212,17 @@ def test():
     print('DOC:', DOC)
     print('current_setting_file_name:', current_setting_file_name('test'))
     print('get:', get_current('test'))
-    print('set:', set_current('test', 'test_value'))
-    print('get:', get_current('test'))
-    print('set:', set_current('test', 'test_value2'))
-    print('get:', get_current('test'))
+    #print('set:', set_current('test', 'test_value'))
+    #print('get:', get_current('test'))
+    #print('set:', set_current('test', 'test_value2'))
+    #print('get:', get_current('test'))
     print('a:', a())
     print('meta:', meta())
     print('media:', media())
     print('a_path:', a_path())
     print('meta_path:', meta_path())
     print('media_path:', media_path('test.png'))
+    print('readme_path:', readme_path())
     print('date_format_reiwa:', date_format_reiwa(datetime.datetime.now()))
     print('date_parse_reiwa:', date_parse_reiwa('60229'))
     print('date_parse_reiwa:', date_parse_reiwa('320420'))
