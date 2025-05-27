@@ -6,13 +6,13 @@ base class to handle GitHub repositories.
 copyright 2025, hanagai
 
 common_git.py
-version: May 25, 2025
+version: May 27, 2025
 """
 
 import os.path
-import subprocess
 import json
 from conf import *
+from common_run import Run
 
 class CommonGit:
   r"""
@@ -92,19 +92,7 @@ class CommonGit:
 
   def run_command(self, command, return_result=False):
     cwd = self.local_path()
-    print(f'at {cwd}')
-    print(' '.join(command))
-    try:
-      result = subprocess.run(command, check=True, capture_output=True, text=True, cwd=cwd)
-      print(result.stdout)
-      print(result.returncode)
-      if return_result:
-        return result
-      else:
-        return True
-    except subprocess.CalledProcessError as e:
-      print(f'Error: {e}')
-      return False
+    return Run.run_command(cwd, command, return_result)
 
   def relative_path(self, file):
     if os.path.isabs(file):
