@@ -22,6 +22,9 @@ def help_usage():
   -e --emoji <emoji>    emoji, default: 🐚
   -d --date <today>     today as 令和 day, default: today formatted as 70527
 
+./base_diff.py  show git diff, git diff --cached, git status -s -b, git add -u
+  -d --dry              disable git add -u
+
 # publish article
 
 ./zenn_previwe.sh   preview zenn article

@@ -14,6 +14,7 @@ import os.path
 from pathlib import Path
 import re
 import datetime
+import random
 
 if __name__ == '__main__':
     import conf_dirs
@@ -23,6 +24,10 @@ else:
 TMP = conf_dirs.TMP
 BASE = conf_dirs.BASE
 DOC = os.path.join(BASE, 'docs')
+QIITA = conf_dirs.QIITA
+Q_DOC = os.path.join(QIITA, 'public')
+ZENN = conf_dirs.ZENN
+Z_DOC = os.path.join(ZENN, 'articles')
 
 def current_setting_file_name(name):
     r"""
@@ -91,6 +96,43 @@ def readme_path():
     get current `readme md` path
     """
     return os.path.join(BASE, 'README.md')
+
+def qiita_name():
+    r"""
+    get current name for qiita article
+    """
+    return get_current('key')
+
+def zenn_name():
+    r"""
+    get current name for zenn article
+    """
+    key = get_current('key')
+    found = list(Path(Z_DOC).glob(f'{key}-*.md'))
+    match len(found):
+        case 0: # generate new one
+            digit = str(random.randint(10000, 99999))
+            name = f'{key}-{digit}'
+            print(f'new zenn article name generated: {name}')
+        case 1: # use existing one
+            name = found[0].stem.split('.')[0]
+        case _: # not expected
+            print(f'Warning: multiple files found for {key}.')
+            print([f.stem for f in found])
+            raise ValueError(f'Multiple files found for {key}. Please resolve the conflict.')
+    return name
+
+def qiita_path():
+    r"""
+    get current `qiita article md` path
+    """
+    return os.path.join(Q_DOC, qiita_name() + '.md')
+
+def zenn_path():
+    r"""
+    get current `zenn article md` path
+    """
+    return os.path.join(Z_DOC, zenn_name() + '.md')
 
 def date_format_reiwa(date):
     r"""
@@ -223,6 +265,10 @@ def test():
     print('meta_path:', meta_path())
     print('media_path:', media_path('test.png'))
     print('readme_path:', readme_path())
+    print('qiita_name:', qiita_name())
+    print('zenn_name:', zenn_name())
+    print('qiita_path:', qiita_path())
+    print('zenn_path:', zenn_path())
     print('date_format_reiwa:', date_format_reiwa(datetime.datetime.now()))
     print('date_parse_reiwa:', date_parse_reiwa('60229'))
     print('date_parse_reiwa:', date_parse_reiwa('320420'))

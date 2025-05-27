@@ -143,6 +143,12 @@ class CommonGit:
     else:
       return True
 
+  def git_add_u(self):
+    if self.enabled() and self.enable_add():
+      return self.run_command(['git', 'add', '-u'])
+    else:
+      return True
+
   def git_commit(self, message):
     if self.enabled() and self.enable_commit():
       return self.run_command(['git', 'commit', '-m', message])

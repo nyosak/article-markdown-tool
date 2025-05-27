@@ -10,6 +10,7 @@ version: May 27, 2025
 """
 
 import subprocess
+import sys
 
 class Run:
   @staticmethod
@@ -27,6 +28,19 @@ class Run:
     except subprocess.CalledProcessError as e:
       print(f'Error: {e}')
       return False
+
+  def run_direct(cwd, command, stdout=sys.stdout, stderr=sys.stderr):
+    r"""
+    run command directly on sys.stdout and sys.stderr.
+    will be colored, paged
+    """
+    print(f'at {cwd}')
+    print(' '.join(command))
+    try:
+      return subprocess.run(command, check=True, cwd=cwd, stdout=stdout, stderr=stderr)
+    except subprocess.CalledProcessError as e:
+      print(f'Error: {e}')
+      raise
 
 
 # Test function to demonstrate usage
@@ -47,6 +61,9 @@ def test():
   print(Run.run_command('.', ['ls', 'not_existing_file'], return_result=True))
   print(Run.run_command('.', ['ls', 'not_existing_file'], return_result=False))
 
+  print(Run.run_direct('.', ['ls', '-l', '--color=always']))
+  print(Run.run_direct('.', ['git', 'diff']))
+  #print(Run.run_direct('.', ['git', 'xxxdiff']))
 
 if __name__ == '__main__':
   test()
