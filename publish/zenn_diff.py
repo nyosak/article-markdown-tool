@@ -2,10 +2,10 @@
 
 r"""
 article publishing tools:
-handle git diff; git add -u; for article-base-doc.
+handle git diff; git add -u; for article-zenn-doc.
 copyright 2025, hanagai
 
-base_diff.py
+zenn_diff.py
 version: May 28, 2025
 """
 
@@ -14,9 +14,9 @@ from conf import *
 from common_run import Run
 from common_diff import CommonDiff
 
-class BaseDiff(CommonDiff):
+class ZennDiff(CommonDiff):
     r"""
-    handle git diff; git add -u; for article-base-doc.
+    handle git diff; git add -u; for article-zenn-doc.
     """
 
     dry_run = False
@@ -25,21 +25,21 @@ class BaseDiff(CommonDiff):
         r"""
         Git Class to use in this class
         """
-        from base_git import BaseGit
-        return BaseGit(skip_initialize=True)
+        from zenn_git import ZennGit
+        return ZennGit(skip_initialize=True)
 
     def local_path(self):
         r"""
         local repo path to use in this class
         """
-        return conf_current.BASE
+        return conf_current.ZENN
 
 
 def main():
   print('main launched manually.')
-  description = 'show git diff and do git add -u at base-doc.'
+  description = 'show git diff and do git add -u at zenn-doc.'
   arg_dry = 'disable git add -u (optional)'
-  myself = 'base_diff.py'
+  myself = 'zenn_diff.py'
 
   f"""
   purpose:
@@ -58,7 +58,7 @@ def main():
   args = parser.parse_args()
 
   print(args)
-  BaseDiff(dry_run=args.dry).diff_and_add()
+  ZennDiff(dry_run=args.dry).diff_and_add()
 
 if __name__ == '__main__':
     main()
