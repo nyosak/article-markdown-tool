@@ -2,10 +2,10 @@
 
 r"""
 article publishing tools:
-create a new article file at zenn-doc.
+create a new article file at qiita-doc.
 copyright 2025, hanagai
 
-zenn_init.py
+qiita_init.py
 version: May 28, 2025
 """
 
@@ -13,25 +13,25 @@ import re
 import datetime
 import os.path
 from conf import *
-from zenn_git import ZennGit
-from zenn_diff import ZennDiff
+from qiita_git import QiitaGit
+from qiita_diff import QiitaDiff
 from common_run import Run
 
 DRY_RUN = False # disable file writing if True
 
-def new_article(git):
+def new_article(args, git):
     r"""
     create a new article document
     """
-    zenn_name = conf_current.zenn_name()
-    expected_md = f'{zenn_name}.md'
+    qiita_name = conf_current.qiita_name()
+    expected_md = f'{qiita_name}.md'
 
-    command = ['npx', 'zenn', 'new:article', '--slug', zenn_name]
+    command = ['npx', 'qiita', 'new', qiita_name]
     if DRY_RUN:
-        created = f'created: articles/{expected_md}'
-        print('DRY_RUN: skipping creating new zenn article file')
+        created = f'created: {expected_md}'
+        print('DRY_RUN: skipping creating new qiita article file')
     else:
-        result = Run.run_command(conf_dirs.ZENN, command, return_result=True)
+        result = Run.run_command(conf_dirs.QIITA, command, return_result=True)
         lines = result.stdout.strip().split('\n')
         created_line = [line for line in lines if re.search(r'^created:', line)]
         # lines may contain other information (e.g. update to new version, pls.)
@@ -46,7 +46,7 @@ def new_article(git):
 
     if re.search(r'^created:', created):
         print(f'created: {created}')
-        new_file = re.sub(r'^.*/', '', created)
+        new_file = re.sub(r'^.*: *', '', created)
         # success case will exit the block here.
         if new_file != expected_md:
             print(new_file)
@@ -54,7 +54,7 @@ def new_article(git):
             print(len(new_file))
             print(len(expected_md))
             print(new_file.split())
-            message = f'Error: created file {new_file} does not match current name {zenn_name}'
+            message = f'Error: created file {new_file} does not match current name {qiita_name}'
             print(message)
             raise ValueError(message)
     else:
@@ -63,95 +63,123 @@ def new_article(git):
         raise RuntimeError(message)
 
     print(new_file)
-    # this should be after the file creation, to avoid creating another name
-    zenn_path = conf_current.zenn_path()
-    print(zenn_path)
+    qiita_path = conf_current.qiita_path()
+    print(qiita_path)
 
     if DRY_RUN:
         print('DRY_RUN: skipping git add')
     else:
-        git.git_add(zenn_path)
+        git.git_add(qiita_path)
 
     return True
 
 def update_from_base(args, git_diff):
     r"""
-    update zenn article file from base
+    update qiita article file from base
     """
-    zenn_path = conf_current.zenn_path()
+    qiita_path = conf_current.qiita_path()
     base_doc = conf_current.a_path()
 
     print('# BEFORE')
-    print_file(zenn_path)
+    print_file(qiita_path)
 
-    update_meta(zenn_path, args)
+    update_meta(qiita_path, args)
 
     print('# AFTER META')
-    print_file(zenn_path)
+    print_file(qiita_path)
 
-    update_doc(zenn_path, base_doc)
+    update_doc(qiita_path, base_doc)
 
     print('# AFTER DOC')
-    print_file(zenn_path)
+    print_file(qiita_path)
 
     if DRY_RUN:
         print('DRY_RUN: skipping git add')
     else:
-        #git.git_add(zenn_path)
+        #git.git_add(qiita_path)
         # no path is needed because it was already added at new
         git_diff.diff_and_add()
 
-def update_meta(zenn_path, args):
+def update_meta(qiita_path, args):
     r"""
-    update meta information of zenn article
+    update meta information of qiita article
     """
-    title = args['title']
-    tech = args['type']
-    emoji = args['emoji']
-    topics = '["' + '", "'.join(args['tags']) + '"]'
-    meta = f'''---
-title: "{title}"
-topics: {topics}
-type: "{tech}"
-emoji: "{emoji}"
-published: true
+    if DRY_RUN:
+        print('DRY_RUN: skipping read initial file')
+        initial_content = f"""---
+title: {args['key']}
+tags:
+  - ''
+private: false
+updated_at: ''
+id: null
+organization_url_name: null
+slide: false
+ignorePublish: false
 ---
-'''
+# new article body
+""".split('\n')
+        initial_content.pop() # remove last item that is ''
+    else:
+        with open(qiita_path, 'r') as file:
+            initial_content = file.readlines()
+    remove_from_initial = [
+        r'^---',
+        r'^ +-',
+        r'^#',
+        r'^title:',
+        r'^tags:',
+    ]
+    remove_pattern = re.compile('|'.join(remove_from_initial))
+    cleaned = [item.rstrip() for item in initial_content if not remove_pattern.search(item)]
+    print(f'initial: {initial_content}')
+    print(f'cleaned: {cleaned}')
+
+    title = args['title']
+    tags = '\n'.join(f"  - {tag}" for tag in args['tags'])
+    cleaned_string = '\n'.join(cleaned)
+    meta = f"""---
+title: '{title}'
+tags:
+{tags}
+{cleaned_string}
+---
+"""
     print(meta)
     if DRY_RUN:
         print(f'DRY_RUN: skipping update meta information')
     else:
-        with open(zenn_path, 'w') as zenn_file:
-            zenn_file.write(meta)
+        with open(qiita_path, 'w') as qiita_file:
+            qiita_file.write(meta)
 
-def update_doc(zenn_path, base_doc):
+def update_doc(qiita_path, base_doc):
     r"""
-    insert base_doc into zenn article
+    insert base_doc into qiita article
     """
     if DRY_RUN:
         print(f'DRY_RUN: skipping append {base_doc}')
     else:
         with open(base_doc, 'r') as base_file:
             base_content = base_file.read()
-            with open(zenn_path, 'a') as zenn_file:
-                zenn_file.write(base_content)
+            with open(qiita_path, 'a') as qiita_file:
+                qiita_file.write(base_content)
 
 def commit_and_push(git, message):
     r"""
     git commit and push
     """
-    zenn_name = conf_current.zenn_name()
+    qiita_name = conf_current.qiita_name()
     if DRY_RUN:
         print('DRY_RUN: skipping git commit, push')
     else:
-        git.git_commit(f'{message}{zenn_name}')
+        git.git_commit(f'{message}{qiita_name}')
         git.git_push()
 
 def print_file(path):
     r"""
     print file content
     """
-    print(f'=== {os.path.relpath(path, conf_current.ZENN)} ===')
+    print(f'=== {os.path.relpath(path, conf_current.QIITA)} ===')
     if DRY_RUN:
         print('DRY_RUN: skipping print file')
     else:
@@ -172,18 +200,18 @@ def notify(message):
 ---
 ''')
 
-def make_initial_document_zenn(args):
+def make_initial_document_qiita(args):
     r"""
-    make initial document for zenn
+    make initial document for qiita
     """
     notify('Begin')
 
-    git = ZennGit(skip_initialize=DRY_RUN)
-    git_diff = ZennDiff(dry_run=DRY_RUN)
-    new_article(git)
-    commit_and_push(git, 'new article: ')
+    git = QiitaGit(skip_initialize=DRY_RUN)
+    git_diff = QiitaDiff(dry_run=DRY_RUN)
+    new_article(args, git)
+    #commit_and_push(git, 'new article: ')
     update_from_base(args, git_diff)
-    commit_and_push(git, 'update from base: ')
+    #commit_and_push(git, 'update from base: ')
 
     notify('Done')
 
@@ -201,7 +229,7 @@ def main():
   print('main launched manually.')
   args = get_current()
   print(args)
-  make_initial_document_zenn(args)
+  make_initial_document_qiita(args)
 
 if __name__ == '__main__':
     main()

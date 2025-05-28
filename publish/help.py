@@ -13,7 +13,7 @@ def help_usage():
   help = r'''
 # new article
 
-./base_init.py  create a new article document at base-doc.
+./base_init.py    create a new article document at base-doc.
   -n --name <name>      article short name, REQUIRED, e.g. android_activity
   -s --series <series>  series name, default: a
   -t --title <title>    article title, default: について、とりあえずメモ
@@ -22,8 +22,11 @@ def help_usage():
   -e --emoji <emoji>    emoji, default: 🐚
   -d --date <today>     today as 令和 day, default: today formatted as 70527
 
-./base_diff.py  show git diff, git diff --cached, git status -s -b, git add -u
+./base_diff.py    show git diff, git diff --cached, git status -s -b, git add -u
   -d --dry              disable git add -u
+
+./zenn_init.py    create a new article file at zenn-doc.
+./qiita_init.py   create a new article file at qiita-doc.
 
 # publish article
 
