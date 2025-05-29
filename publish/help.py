@@ -24,26 +24,45 @@ def help_usage():
 
 ./base_diff.py    show git diff, git diff --cached, git status -s -b, git add -u
   -d --dry              disable git add -u
+./base_add_media.py   TODO copy and git add pictures
+./base_commit.py  TODO git add -u, diff, commit, push
 
 ./zenn_init.py    create a new article file at zenn-doc.
+  -d --dry              disable file writing and git
+  -n --nogit            disable git
 ./qiita_init.py   create a new article file at qiita-doc.
+  -d --dry              disable file writing and git
+  -n --nogit            disable git
+
+./zenn_update.py  update current new article file at zenn-doc.
+  -d --dry              disable file writing and git
+  -n --nogit            disable git
+./qiita_update.py update current new article file at qiita-doc.
+  -d --dry              disable file writing and git
+  -n --nogit            disable git
 
 # publish article
 
 ./zenn_previwe.sh   preview zenn article
 ./qiita_preview.sh  preview qiita article
 
+./all_publish.py  TODO base_publish, zenn_publish and qiita_publish
 
 # edit article published
 
+./base_checkout.py  TODO
+
 # edit qiita article only
+
+./qiita_checkout.py TODO
 
 # edit zenn article only
 
+./zenn_checkout.py  TODO
 
 # miscellaneous
 
-./show_current.py  show current series, type, tags, emoji
+./show_current.py  show current series, name, key, now
 ./help.py          show this help message
 '''
   return help

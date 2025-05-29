@@ -6,7 +6,7 @@ run shell command in subprocess
 copyright 2025, hanagai
 
 common_run.py
-version: May 27, 2025
+version: May 29, 2025
 """
 
 import subprocess
@@ -29,6 +29,7 @@ class Run:
       print(f'Error: {e}')
       return False
 
+  @staticmethod
   def run_direct(cwd, command, stdout=sys.stdout, stderr=sys.stderr):
     r"""
     run command directly on sys.stdout and sys.stderr.
