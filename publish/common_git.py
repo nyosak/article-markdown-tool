@@ -6,7 +6,7 @@ base class to handle GitHub repositories.
 copyright 2025, hanagai
 
 common_git.py
-version: May 27, 2025
+version: May 30, 2025
 """
 
 import os.path
@@ -118,9 +118,12 @@ class CommonGit:
     else:
       return True
 
-  def git_status_short(self):
+  def git_status_short(self, with_branch=False):
     if self.enabled():
-      result = self.run_command(['git', 'status', '-s'], return_result=True)
+      command = ['git', 'status', '-s']
+      if with_branch:
+        command.append('-b')
+      result = self.run_command(command, return_result=True)
       return result.stdout
     else:
       return True
@@ -157,7 +160,7 @@ class CommonGit:
 
   def git_push(self):
     if self.enabled() and self.enable_push():
-      return self.run_command(['git', 'push', self.repo_url(), self.branch()])
+      return self.run_command(['git', 'push', '-u', self.repo_url(), self.branch()])
     else:
       return True
 
@@ -206,14 +209,12 @@ class CommonGit:
     else:
       return True
 
-  def git_create_pull_request(self, body=None):
+  def git_create_pull_request(self, body='required'):
     if self.enabled() and self.enable_pull_request():
       base = self.main_branch()
       head = self.branch()
       title = f'{head} to {base}'
-      command = ['gh', 'pr', 'create', '--title', title, '--base', base, '--head', head]
-      if body:
-        command.extend(['--body', body])
+      command = ['gh', 'pr', 'create', '--title', title, '--base', base, '--head', head, '--body', body]
 
       result = self.run_command(command, return_result=True)
 
