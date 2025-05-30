@@ -47,7 +47,10 @@ def help_usage():
 ./zenn_previwe.sh   preview zenn article
 ./qiita_preview.sh  preview qiita article
 
-./all_publish.py  TODO base_publish, zenn_publish and qiita_publish
+./all_publish.py    base_publish, zenn_publish and qiita_publish
+  -d --dry              disable git writing
+  -n --nomerge          create pull request, but not merge it
+  -i --ignore           ignore uncommitted changes
 
 # edit article published
 
