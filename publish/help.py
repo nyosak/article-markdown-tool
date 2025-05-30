@@ -25,7 +25,8 @@ def help_usage():
 ./base_diff.py    show git diff, git diff --cached, git status -s -b, git add -u
   -d --dry              disable git add -u
 ./base_add_media.py   TODO copy and git add pictures
-./base_commit.py  TODO git add -u, diff, commit, push
+./base_commit.py      git commit, push
+  -m --message          commit message, default: update
 
 ./zenn_init.py    create a new article file at zenn-doc.
   -d --dry              disable file writing and git
