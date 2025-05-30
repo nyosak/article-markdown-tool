@@ -121,6 +121,13 @@ created: {esc_in}articles/{expected_md}{esc_out}
         #out = "Error: 'hoge.md' is already exist"
         return out
 
+    def transform_doc_md(self, content):
+        r"""
+        transform md
+        """
+        return content
+
+
     r"""
     override methods before this line in the class
     """
@@ -248,7 +255,7 @@ created: {esc_in}articles/{expected_md}{esc_out}
             with open(base_doc, 'r') as base_file:
                 base_content = base_file.read()
                 with open(article_path, 'a') as file:
-                    file.write(base_content)
+                    file.write(self.transform_doc_md(base_content))
 
     def update_meta(self, article_path):
         r"""
@@ -522,10 +529,15 @@ def test11(cls):
     except Exception as e:
         print(e)
 
+def test12(cls):
+    a = cls(dry_run=True, no_git=True)
+    out = a.example_stdout_at_new('my_expected.md')
+    print(a.transform_doc_md('# transform me!'))
+
 def test():
   print('test launched manually.')
   cls = CommonUpdate
-  test11(cls)
+  test12(cls)
 
 if __name__ == '__main__':
     test()
