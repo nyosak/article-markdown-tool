@@ -52,6 +52,8 @@ def help_usage():
   -n --nomerge          create pull request, but not merge it
   -i --ignore           ignore uncommitted changes
 
+./nolook_publish.py TODO
+
 # edit article published
 
 ./base_checkout.py  TODO
