@@ -58,15 +58,21 @@ def help_usage():
 
 # edit article published
 
-./base_checkout.py  TODO
+./base_checkout.py  checkout article published for base.
+  1st                   key to checkout; 70530_publish_zenn_qiita
+  -d --dry              disable changes
 
 # edit qiita article only
 
-./qiita_checkout.py TODO
+./qiita_checkout.py checkout article published for zenn.
+  1st                   key to checkout; 70530_publish_zenn_qiita
+  -d --dry              disable changes
 
 # edit zenn article only
 
-./zenn_checkout.py  TODO
+./zenn_checkout.py  checkout article published for qiita.
+  1st                   key to checkout; 70530_publish_zenn_qiita
+  -d --dry              disable changes
 
 # miscellaneous
 
