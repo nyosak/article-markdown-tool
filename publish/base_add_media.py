@@ -94,7 +94,7 @@ def add_media_files(args):
   git = BaseGit(skip_initialize=dry_run)
 
   for file in files:
-    add_media_a_file(dry_run, file, git)
+    add_media_a_file(dry_run, os.path.abspath(file), git)
 
   notify('Done')
 

@@ -71,6 +71,7 @@ def help_usage():
 # miscellaneous
 
 ./show_current.py  show current series, name, key, now
+./show_status.py   git status for all repositories
 ./help.py          show this help message
 '''
   return help
