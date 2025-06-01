@@ -7,7 +7,7 @@ current settings
 copyright 2025, hanagai
 
 conf/conf_current.py
-version: May 27, 2025
+version: June 1, 2025
 """
 
 import os.path
@@ -89,7 +89,13 @@ def media_path(name):
     r"""
     get current `media file` path
     """
-    return os.path.join(meta(), f"{get_current('key')}_{name}")
+    base_name = os.path.basename(name)
+    key = f"{get_current('key')}_"
+    if base_name.startswith(key):
+        new_name = base_name
+    else:
+        new_name = f'{key}{base_name}'
+    return os.path.join(media(), new_name)
 
 def readme_path():
     r"""
