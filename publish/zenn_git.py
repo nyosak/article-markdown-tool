@@ -6,7 +6,7 @@ handle GitHub repository article-zenn-doc.
 copyright 2025, hanagai
 
 zenn_git.py
-version: May 25, 2025
+version: June 1, 2025
 """
 
 from common_git import CommonGit
@@ -26,6 +26,8 @@ def test():
   print('test launched manually.')
   b = ZennGit(skip_initialize=True)
   print(b)
+  #print(b.is_danger_here())
+  #print(b.git_add('test'))
 
 if __name__ == '__main__':
   test()

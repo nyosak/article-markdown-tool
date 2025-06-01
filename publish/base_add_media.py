@@ -18,6 +18,16 @@ from conf import *
 from common_run import Run
 from base_git import BaseGit
 
+def md_link(file, git):
+  r"""
+  return markdown link for image url
+  """
+  key = f"{conf_current.get_current('key')}_"
+  alt = re.sub(key, '', os.path.basename(file))
+  media = re.sub('^docs/', '', relative_path(file))
+  url = f'{git.io_url()}{media}'
+  return f'![{alt}]({url})'
+
 def relative_path(file):
   r"""
   relative path from base repo
@@ -48,6 +58,7 @@ def git_add(dry_run, dest_file, git):
   r"""
   git add
   """
+  print(f' - {md_link(dest_file, git)}')
   if dry_run:
     print(f'DRY-RUN: not git add {relative_path(dest_file)}')
   else:
@@ -109,7 +120,7 @@ def main():
 
   parser = argparse.ArgumentParser(description=description)
   parser.add_argument('-f', '--files', help=arg_files, nargs='+', required=True)
-  parser.add_argument('-d', '--dry', help=arg_dry, default=True, action='store_true')
+  parser.add_argument('-d', '--dry', help=arg_dry, default=False, action='store_true')
   args = parser.parse_args()
 
   print(args)

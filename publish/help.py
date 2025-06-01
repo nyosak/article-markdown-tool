@@ -6,7 +6,7 @@ help
 copyright 2025, hanagai
 
 help.py
-version: May 27, 2025
+version: June 1, 2025
 """
 
 def help_usage():
@@ -24,7 +24,9 @@ def help_usage():
 
 ./base_diff.py    show git diff, git diff --cached, git status -s -b, git add -u
   -d --dry              disable git add -u
-./base_add_media.py   TODO copy and git add pictures
+./base_add_media.py   copy and git add pictures
+  -f --files            source files to copy into base media
+  -d --dry              disable file writing and git
 ./base_commit.py      git commit, push
   -m --message          commit message, default: update
 

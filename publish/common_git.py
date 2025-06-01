@@ -6,7 +6,7 @@ base class to handle GitHub repositories.
 copyright 2025, hanagai
 
 common_git.py
-version: May 30, 2025
+version: June 1, 2025
 """
 
 import os.path
@@ -35,6 +35,10 @@ class CommonGit:
     account_prefix = f'{self.account_name()}@' if self.account_name() else ''
     repo_dir = f'{self.account_name()}/{self.repo_name()}'
     return f'https://{account_prefix}github.com/{repo_dir}.git'
+
+  def io_url(self):
+    return f'https://{self.account_name()}.github.io/{self.repo_name()}/'
+    #return 'https://nyosak.github.io/article-base-doc/'
 
   def branch(self):
     return conf_current.get_current('key')
@@ -69,6 +73,15 @@ class CommonGit:
   def enable_pull_request(self):
     # requires GitHub CLI
     return True
+
+  def is_danger_here(self):
+    # prohibit adding another branch
+    current_branch = self.git_current_branch()
+    target_branch = self.branch()
+    danger = current_branch != target_branch
+    if danger:
+      print(f'WARN: current branch {current_branch} is not {target_branch}')
+    return danger
 
   def __init__(self, skip_initialize=False):
     if skip_initialize:
@@ -142,24 +155,32 @@ class CommonGit:
 
   def git_add(self, file):
     if self.enabled() and self.enable_add():
+      if self.is_danger_here():
+        raise RuntimeError('Error: prohibit git add to this branch')
       return self.run_command(['git', 'add', self.relative_path(file)])
     else:
       return True
 
   def git_add_u(self):
     if self.enabled() and self.enable_add():
+      if self.is_danger_here():
+        raise RuntimeError('Error: prohibit git add to this branch')
       return self.run_command(['git', 'add', '-u'])
     else:
       return True
 
   def git_commit(self, message):
     if self.enabled() and self.enable_commit():
+      if self.is_danger_here():
+        raise RuntimeError('Error: prohibit git commit to this branch')
       return self.run_command(['git', 'commit', '-m', message])
     else:
       return True
 
   def git_push(self):
     if self.enabled() and self.enable_push():
+      if self.is_danger_here():
+        raise RuntimeError('Error: prohibit git push to this branch')
       return self.run_command(['git', 'push', '-u', self.repo_url(), self.branch()])
     else:
       return True

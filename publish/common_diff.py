@@ -6,7 +6,7 @@ base class to handle git diff; git add -u;
 copyright 2025, hanagai
 
 common_diff.py
-version: May 28, 2025
+version: June 1, 2025
 """
 
 import argparse
@@ -21,6 +21,7 @@ class CommonDiff:
     """
 
     dry_run = False
+    pager = True
 
     def git(self):
         r"""
@@ -35,9 +36,10 @@ class CommonDiff:
         """
         return conf_current.BASE
 
-    def __init__(self, dry_run=False):
+    def __init__(self, dry_run=False, pager=True):
         # dry_run disables git add -u
         self.dry_run = dry_run
+        self.pager = pager
 
     def __str__(self):
         return (
@@ -51,6 +53,8 @@ class CommonDiff:
         show git diff
         """
         command = ['git', 'diff']
+        if not self.pager:
+            command.insert(1, '--no-pager')
         Run.run_direct(self.local_path(), command)
 
     def show_git_diff_cached(self):
@@ -58,6 +62,8 @@ class CommonDiff:
         show git diff
         """
         command = ['git', 'diff', '--cached']
+        if not self.pager:
+            command.insert(1, '--no-pager')
         Run.run_direct(self.local_path(), command)
 
     def show_status(self):
@@ -65,6 +71,8 @@ class CommonDiff:
         show git status
         """
         command = ['git', 'status', '-s', '-b']
+        if not self.pager:
+            command.insert(1, '--no-pager')
         Run.run_direct(self.local_path(), command)
 
 
