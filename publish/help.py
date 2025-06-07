@@ -6,7 +6,7 @@ help
 copyright 2025, hanagai
 
 help.py
-version: June 1, 2025
+version: June 8, 2025
 """
 
 def help_usage():
@@ -82,7 +82,9 @@ def help_usage():
   1st              key to list (partial is acceptable)
 ./base_editor.sh   open editor to edit files at base
   1st              key to edit (partial is acceptable)
+                   `current` to edit file for current branch
   2nd              `yaml` to edit yaml files rather than md (optional)
+  3rd              editor command (optional)
 ./help.py          show this help message
 '''
   return help
