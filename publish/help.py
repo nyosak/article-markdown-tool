@@ -78,6 +78,11 @@ def help_usage():
 
 ./show_current.py  show current series, name, key, now
 ./show_status.py   git status for all repositories
+./base_ls.sh       list files at base
+  1st              key to list (partial is acceptable)
+./base_editor.sh   open editor to edit files at base
+  1st              key to edit (partial is acceptable)
+  2nd              `yaml` to edit yaml files rather than md (optional)
 ./help.py          show this help message
 '''
   return help
