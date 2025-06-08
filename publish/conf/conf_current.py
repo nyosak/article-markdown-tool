@@ -7,7 +7,7 @@ current settings
 copyright 2025, hanagai
 
 conf/conf_current.py
-version: June 1, 2025
+version: June 8, 2025
 """
 
 import os.path
@@ -139,6 +139,24 @@ def zenn_path():
     get current `zenn article md` path
     """
     return os.path.join(Z_DOC, zenn_name() + '.md')
+
+def has_base_file():
+    r"""
+    check if base file exists
+    """
+    return os.path.exists(a_path())
+
+def has_qiita_file():
+    r"""
+    check if qiita file exists
+    """
+    return os.path.exists(qiita_path())
+
+def has_zenn_file():
+    r"""
+    check if zenn file exists
+    """
+    return os.path.exists(zenn_path())
 
 def date_format_reiwa(date):
     r"""

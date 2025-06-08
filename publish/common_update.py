@@ -6,7 +6,7 @@ base class to create and update an article file from base.
 copyright 2025, hanagai
 
 common_update.py
-version: May 30, 2025
+version: June 8, 2025
 """
 
 import re
@@ -22,6 +22,7 @@ class CommonUpdate:
 
     dry_run = False
     no_git = False
+    pager = True
     current = {}
     _git = None
     _git_diff = None
@@ -143,11 +144,13 @@ created: {esc_in}articles/{expected_md}{esc_out}
             yaml[key] = conf_current.get_current(key)
         return yaml
 
-    def __init__(self, dry_run=False, no_git=False):
+    def __init__(self, dry_run=False, no_git=False, pager=True):
         # dry_run disables file writing and git
         # no_git disables git only
+        # pager disables git diff pager when False
         self.dry_run = dry_run
         self.no_git = no_git
+        self.pager = pager
         self.current = self.get_current()
 
     def __str__(self):
@@ -413,6 +416,7 @@ created: {esc_in}articles/{expected_md}{esc_out}
         """
         self.notify('Begin')
 
+        print(self.git())
         self.new_article()
         self.commit_and_push('new article: ')
         self.update_from_base()
@@ -426,6 +430,7 @@ created: {esc_in}articles/{expected_md}{esc_out}
         """
         self.notify('Begin')
 
+        print(self.git())
         self.update_from_base()
         self.commit_and_push('update from base: ')
 
