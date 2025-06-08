@@ -52,9 +52,9 @@ fi
 wild=${key}'*'
 
 if [ "$yaml" == "yaml" ];then
-  files=`ls -1 docs/*/*$wild.yaml`
+  files=`ls -1 -t docs/*/*$wild.yaml`
 else
-  files=`ls -1 docs/*/*$wild.md`
+  files=`ls -1 -t docs/*/*$wild.md`
 fi
 
 echo $editor $files

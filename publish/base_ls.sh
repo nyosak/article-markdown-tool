@@ -18,6 +18,6 @@ else
 fi
 
 echo '# md'
-ls docs/*/*$wild.md
+ls -t docs/*/*$wild.md
 echo -e "\n# yaml"
 head -n 2 docs/*/*$wild.yaml
