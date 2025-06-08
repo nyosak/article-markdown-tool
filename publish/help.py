@@ -54,7 +54,11 @@ def help_usage():
   -n --nomerge          create pull request, but not merge it
   -i --ignore           ignore uncommitted changes
 
-./nolook_publish.py TODO
+./nolook_publish.py zenn_init/update, qiita init/update and all_publish
+  --publish             required to confirm
+  -d --dry              disable git writing
+  -n --nomerge          create pull request, but not merge it
+  -i --ignore           ignore uncommitted changes
 
 # edit article published
 
